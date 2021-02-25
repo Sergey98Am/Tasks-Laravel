@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use JWTAuth;
 
 class AuthController extends Controller
 {
@@ -19,20 +20,20 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $token = auth()->fromUser($user);
+            $token = JWTAuth::fromUser($user);
 
             if (!$user) {
                 throw new \Exception('Something went wrong');
             }
 
             if ($request->rememberMe) {
-                $token = auth()->setTTL(86400 * 30)->fromUser($user);
+                $token = JWTAuth::setTTL(86400 * 30)->fromUser($user);
             }
 
             return response()->json([
                 'token' => $token,
                 'user' => User::find($user->id),
-                'ttl' => auth()->factory()->getTTL(),
+                'ttl' => JWTAuth::factory()->getTTL(),
             ], 200);
 
         } catch (\Exception $e) {
@@ -52,19 +53,19 @@ class AuthController extends Controller
         try {
             $credentials = $request->only('email', 'password');
 
-            $token = auth()->attempt($credentials);
+            $token = JWTAuth::attempt($credentials);
 
             if (!$token) {
                 throw new \Exception('Unauthorized');
             }
 
             if ($request->remember_me) {
-                $token = auth()->setTTL(86400 * 30)->attempt($credentials);
+                $token = JWTAuth::setTTL(86400 * 30)->attempt($credentials);
             }
 
             return response()->json([
                 'token' => $token,
-                'user' => User::find(auth()->id())
+                'user' => User::find(JWTAuth::user()->id)
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -80,7 +81,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(JWTAuth::user());
     }
 
     /**
@@ -90,7 +91,7 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        auth()->logout();
+        JWTAuth::logout();
 
         return response()->json([
             'message' => 'Successfully logged out'

@@ -7,5 +7,8 @@ Route::group([
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::get('logout', 'AuthController@logout');
-    Route::get('me', 'AuthController@me');
+});
+
+Route::middleware('jwt')->group(function () {
+    Route::get('me', 'Auth\AuthController@me');
 });

@@ -3,7 +3,11 @@
 namespace App\Exceptions;
 
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Throwable;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Tymon\JWTAuth\Exceptions\TokenExpiredException;
+use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
 class Handler extends ExceptionHandler
 {
@@ -48,8 +52,29 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
+    //middleware JWT
     public function render($request, Throwable $exception)
     {
+        if ($exception instanceOf TokenInvalidException) {
+            return response()->json([
+                'error' => 'Token is Invalid'
+            ],400);
+        }
+        elseif ($exception instanceOf TokenExpiredException) {
+            return response()->json([
+                'error' => 'Token is Expired'
+            ],400);
+        }
+        elseif ($exception instanceOf JWTException) {
+            return response()->json([
+                'error' => 'There is problem with your token'
+            ],400);
+        } elseif ($exception instanceOf ValidationException) {
+            return response()->json([
+                'error' => $exception->errors()
+            ],400);
+        }
+
         return parent::render($request, $exception);
     }
 }
