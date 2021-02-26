@@ -3,14 +3,15 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\LoginRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use JWTAuth;
 
 class AuthController extends Controller
 {
-    public function register(Request $request)
+    public function register(RegisterRequest $request)
     {
         try {
             $user = User::create([
@@ -27,7 +28,7 @@ class AuthController extends Controller
             }
 
             if ($request->rememberMe) {
-                $token = JWTAuth::setTTL(86400 * 30)->fromUser($user);
+                $token = auth()->setTTL(86400 * 30)->fromUser($user);
             }
 
             return response()->json([
@@ -48,7 +49,7 @@ class AuthController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
         try {
             $credentials = $request->only('email', 'password');
@@ -60,7 +61,7 @@ class AuthController extends Controller
             }
 
             if ($request->remember_me) {
-                $token = JWTAuth::setTTL(86400 * 30)->attempt($credentials);
+                $token = auth()->setTTL(86400 * 30)->attempt($credentials);
             }
 
             return response()->json([
@@ -91,10 +92,16 @@ class AuthController extends Controller
      */
     public function logout()
     {
-        JWTAuth::logout();
+        try {
+            JWTAuth::invalidate();
 
-        return response()->json([
-            'message' => 'Successfully logged out'
-        ]);
+            return response()->json([
+                'message' => 'Successfully logged out'
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
     }
 }
