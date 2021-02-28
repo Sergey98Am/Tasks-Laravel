@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -10,6 +11,7 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject
 {
     use Notifiable;
+    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -17,7 +19,10 @@ class User extends Authenticatable implements JWTSubject
      * @var array
      */
     protected $fillable = [
-        'first_name', 'last_name', 'email', 'password',
+        'first_name',
+        'last_name',
+        'email',
+        'password',
     ];
 
     /**
@@ -42,10 +47,6 @@ class User extends Authenticatable implements JWTSubject
         return ucwords($this->first_name.' '.$this->last_name);
     }
 
-    protected $appends = [
-        'full_name',
-    ];
-
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -64,5 +65,13 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    protected $appends = [
+        'full_name',
+    ];
+
+    public function boards() {
+        return $this->hasMany('App\Models\Board');
     }
 }
