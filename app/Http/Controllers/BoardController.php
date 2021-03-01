@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BoardRequest;
 use App\Models\Board;
-use Illuminate\Http\Request;
 use JWTAuth;
 
 class BoardController extends Controller
@@ -37,7 +37,7 @@ class BoardController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(BoardRequest $request)
     {
         try {
             $board = Board::create([
@@ -50,6 +50,7 @@ class BoardController extends Controller
             }
 
             return response()->json([
+                'board' => $board,
                 'message' => 'Board successfully created'
             ], 200);
         } catch (\Exception $e) {
@@ -66,7 +67,7 @@ class BoardController extends Controller
      * @param $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(BoardRequest $request, $id)
     {
         try {
             $board = Board::find($id);
@@ -81,6 +82,7 @@ class BoardController extends Controller
             ]);
 
             return response()->json([
+                'board' => $board,
                 'message' => 'Board successfully updated'
             ], 200);
         } catch (\Exception $e) {
@@ -108,6 +110,7 @@ class BoardController extends Controller
             $board->delete();
 
             return response()->json([
+                'board' => $board,
                 'message' => 'Board successfully deleted'
             ], 200);
         } catch (\Exception $e) {
