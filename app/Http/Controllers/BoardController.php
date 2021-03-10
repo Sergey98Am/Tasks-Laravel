@@ -64,13 +64,13 @@ class BoardController extends Controller
      * Update the specified resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @param $id
+     * @param $boardId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(BoardRequest $request, $id)
+    public function update(BoardRequest $request, $boardId)
     {
         try {
-            $board = Board::find($id);
+            $board = Board::find($boardId);
 
             if (!$board) {
                 throw new \Exception('Board does not exist');
@@ -95,13 +95,13 @@ class BoardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param $id
+     * @param $boardId
      * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy($boardId)
     {
         try {
-            $board = Board::find($id);
+            $board = Board::find($boardId);
 
             if (!$board) {
                 throw new \Exception('Board does not exist');

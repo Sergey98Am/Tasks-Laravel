@@ -13,4 +13,14 @@ class Board extends Model
         'title',
         'user_id',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo('App\Models\User');
+    }
+
+    public function lists()
+    {
+        return $this->hasMany('App\Models\Lists');
+    }
 }
