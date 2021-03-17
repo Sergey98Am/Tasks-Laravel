@@ -19,4 +19,10 @@ Route::middleware('jwt')->group(function () {
     Route::put('/boards/{board}/lists/{list}','ListController@update');
     Route::delete('/boards/{board}/lists/{list}','ListController@destroy');
     Route::post('/sort_list','ListController@sortList');
+    //Cards
+    Route::post('lists/{list}/cards','CardController@store');
+    Route::put('lists/{list}/cards/{card}','CardController@update');
+    Route::delete('lists/{list}/cards/{card}','CardController@destroy');
+    Route::post('/sort_card','CardController@sortCard');
+    Route::post('/move_card_to_another_list/{card}','CardController@moveCardToAnotherList');
 });
