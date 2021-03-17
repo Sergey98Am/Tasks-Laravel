@@ -14,7 +14,11 @@ class ListController extends Controller
         try {
             $board = Board::with([
                 'lists' => function ($q) {
-                    $q->orderBy('order');
+                    $q->orderBy('order')->with([
+                        'cards' => function ($q) {
+                            $q->orderBy('order');
+                        }
+                    ]);
                 }
             ])->find($boardId);
 
@@ -31,10 +35,12 @@ class ListController extends Controller
     public function store(ListRequest $request, $boardId)
     {
         try {
-            $list = Lists::create([
+            $list = Board::find($boardId)->lists()->create([
                 'title' => $request->title,
                 'board_id' => $boardId
-            ]);
+            ])->load('cards');
+
+//            $a = Lists::with('cards')->find($list->id);
 
             if (!$list) {
                 throw new \Exception('Something went wrong');

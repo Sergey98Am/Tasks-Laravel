@@ -18,4 +18,9 @@ class Lists extends Model
     {
         return $this->belongsTo('App\Models\Board');
     }
+
+    public function cards()
+    {
+        return $this->hasMany('App\Models\Card');
+    }
 }
