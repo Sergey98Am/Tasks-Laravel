@@ -6,6 +6,8 @@ Route::group([
 ], function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
+    Route::post('forgot-password', 'ForgotPasswordController@sendResetLinkEmail');
+    Route::post('reset-password', 'ResetPasswordController@reset');
 });
 
 Route::middleware('jwt')->group(function () {
