@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
-use Illuminate\Http\Request;
+use App\Http\Requests\ForgotPasswordRequest;
+use App\Models\User;
+use Illuminate\Support\Facades\Password;
 
 class ForgotPasswordController extends Controller
 {
@@ -19,19 +20,36 @@ class ForgotPasswordController extends Controller
     |
     */
 
-    use SendsPasswordResetEmails;
-
-    protected function sendResetLinkResponse(Request $request, $response)
+    public function sendResetLinkEmail(ForgotPasswordRequest $request)
     {
-        return response()->json([
-            'message' => trans($response)
-        ], 200);
+        try {
+            $user = User::where('email', $request->email)->where('email_verified_at', NULL)->first();
+
+            if ($user) {
+                throw new \Exception('Email is not verified');
+            }
+
+            $response = $this->broker()->sendResetLink(
+                $request->only('email')
+            );
+
+            if ($response !== Password::RESET_LINK_SENT) {
+                throw new \Exception('Failed to send mail');
+            }
+
+            return response()->json([
+                'message' => 'Email sent',
+                'response' => $response
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => $e->getMessage(),
+            ], 400);
+        }
     }
 
-    protected function sendResetLinkFailedResponse(Request $request, $response)
+    public function broker()
     {
-        return response()->json([
-            'error' => trans($response)
-        ], 400);
+        return Password::broker();
     }
 }

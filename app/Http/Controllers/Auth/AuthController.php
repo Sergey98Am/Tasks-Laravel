@@ -21,20 +21,14 @@ class AuthController extends Controller
                 'password' => Hash::make($request->password),
             ]);
 
-            $token = JWTAuth::fromUser($user);
-
             if (!$user) {
                 throw new \Exception('Something went wrong');
             }
 
-            if ($request->rememberMe) {
-                $token = auth()->setTTL(86400 * 30)->fromUser($user);
-            }
+            $user->sendEmailVerificationNotification();
 
             return response()->json([
-                'token' => $token,
-                'user' => User::find($user->id),
-                'ttl' => JWTAuth::factory()->getTTL(),
+                'message' => 'Check your email',
             ], 200);
 
         } catch (\Exception $e) {
@@ -52,6 +46,12 @@ class AuthController extends Controller
     public function login(LoginRequest $request)
     {
         try {
+            $user = User::where('email', $request->email)->where('email_verified_at', NULL)->first();
+
+            if ($user) {
+                throw new \Exception('Email is not verified');
+            }
+
             $credentials = $request->only('email', 'password');
 
             $token = JWTAuth::attempt($credentials);
