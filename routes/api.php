@@ -8,6 +8,8 @@ Route::group([
     Route::post('login', 'AuthController@login');
     Route::post('forgot-password', 'ForgotPasswordController@sendResetLinkEmail');
     Route::post('reset-password', 'ResetPasswordController@reset');
+    Route::get('/email/resend', 'VerificationController@resend')->name('verification.resend');
+    Route::get('/email-verification', 'VerificationController@verify');
 });
 
 Route::middleware('jwt')->group(function () {
