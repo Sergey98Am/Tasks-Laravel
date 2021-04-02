@@ -2,7 +2,8 @@
 
 Route::group([
     'prefix' => 'auth',
-    'namespace' => 'Auth'
+    'namespace' => 'Auth',
+    'middleware' => 'guest'
 ], function () {
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
@@ -10,6 +11,8 @@ Route::group([
     Route::post('reset-password', 'ResetPasswordController@reset');
     Route::get('/email/resend', 'VerificationController@resend')->name('verification.resend');
     Route::get('/email-verification', 'VerificationController@verify');
+    Route::get('/authorize/{provider}/redirect', 'SocialAuthController@redirectToProvider');
+    Route::get('/authorize/{provider}/callback', 'SocialAuthController@handleProviderCallback');
 });
 
 Route::middleware('jwt')->group(function () {

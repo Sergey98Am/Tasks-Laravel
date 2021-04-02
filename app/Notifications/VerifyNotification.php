@@ -45,7 +45,7 @@ class VerifyNotification extends Notification
             'hash' => sha1($notifiable->getEmailForVerification())
         ];
 
-        $url = "http://localhost:8080/#/verify-email?";
+        $url = env('FRONT_APP') . '/verify-email?';
 
         foreach ($params as $key => $param) {
             $url .= "{$key}={$param}&";
