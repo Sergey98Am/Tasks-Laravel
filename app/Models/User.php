@@ -21,10 +21,10 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
      * @var array
      */
     protected $fillable = [
-        'first_name',
-        'last_name',
+        'name',
         'email',
         'password',
+        'email_verified_at'
     ];
 
     /**
@@ -45,9 +45,9 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-    public function getFullNameAttribute() {
-        return ucwords($this->first_name.' '.$this->last_name);
-    }
+//    public function getFullNameAttribute() {
+//        return ucwords($this->first_name.' '.$this->last_name);
+//    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -69,12 +69,17 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
-    protected $appends = [
-        'full_name',
-    ];
+//    protected $appends = [
+//        'full_name',
+//    ];
 
     public function boards() {
         return $this->hasMany('App\Models\Board');
+    }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany('App\Models\SocialAccount');
     }
 
     public function sendPasswordResetNotification($token)
