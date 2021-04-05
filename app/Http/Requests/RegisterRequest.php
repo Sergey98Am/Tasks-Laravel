@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Captcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class RegisterRequest extends FormRequest
@@ -24,9 +25,10 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => ['required','regex:/^[a-zA-Z]+(?:-[a-zA-Z]+)*$/'],
+            'name' => ['required',"regex:/\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/"],
             'email' => ['required','email','unique:users'],
             'password' => ['required','min:8','confirmed'],
+            'g_recaptcha_response' => new Captcha()
         ];
     }
 }

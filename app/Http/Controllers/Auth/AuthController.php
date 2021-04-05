@@ -11,6 +11,18 @@ use JWTAuth;
 
 class AuthController extends Controller
 {
+    public function checkToken() {
+        try {
+            return response()->json([
+                'success' => true,
+            ], 200);
+        } catch(\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
     public function register(RegisterRequest $request)
     {
         try {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\Captcha;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
@@ -26,6 +27,7 @@ class LoginRequest extends FormRequest
         return [
             'email' => ['required','email'],
             'password' => ['required'],
+            'g_recaptcha_response' => new Captcha()
         ];
     }
 }
