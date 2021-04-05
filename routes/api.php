@@ -16,6 +16,7 @@ Route::group([
 });
 
 Route::middleware('jwt')->group(function () {
+    Route::post('/check-token','Auth\AuthController@checkToken');
     Route::get('me', 'Auth\AuthController@me');
     Route::get('logout', 'Auth\AuthController@logout');
     //Boards
