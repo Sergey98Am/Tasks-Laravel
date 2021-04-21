@@ -33,4 +33,9 @@ Route::middleware('jwt')->group(function () {
     Route::delete('lists/{list}/cards/{card}','CardController@destroy');
     Route::post('/sort_card','CardController@sortCard');
     Route::post('/move_card_to_another_list/{card}','CardController@moveCardToAnotherList');
+    //Admin
+    Route::resource('roles', 'Admin\UserManagement\RoleController');
+    Route::get('abilities', 'Admin\UserManagement\RoleController@abilities');
+    Route::resource('permissions', 'Admin\UserManagement\PermissionController');
+    Route::resource('users', 'Admin\UserManagement\UserController');
 });
