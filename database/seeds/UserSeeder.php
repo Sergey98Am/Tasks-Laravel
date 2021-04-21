@@ -17,7 +17,9 @@ class UserSeeder extends Seeder
             [
                 'name' => 'Sergey Gabrielyan',
                 'email' => 'serg98barca@gmail.com',
+                'email_verified_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'password' => Hash::make('serg_password'),
+                'role_id' => 2,
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
             ],

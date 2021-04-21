@@ -17,7 +17,6 @@ class BoardController extends Controller
     {
         try {
             $boards = Board::where('user_id', JWTAuth::user()->id)
-                ->where('deleted_at', NULL)
                 ->orderBy('id', 'DESC')
                 ->get();
 

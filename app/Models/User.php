@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Notifications\PasswordResetNotification;
 use App\Notifications\VerifyNotification;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -13,7 +12,6 @@ use Tymon\JWTAuth\Contracts\JWTSubject;
 class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 {
     use Notifiable;
-    use SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -24,7 +22,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'name',
         'email',
         'password',
-        'email_verified_at'
+        'email_verified_at',
+        'role_id'
     ];
 
     /**
@@ -69,19 +68,6 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return [];
     }
 
-//    protected $appends = [
-//        'full_name',
-//    ];
-
-    public function boards() {
-        return $this->hasMany('App\Models\Board');
-    }
-
-    public function socialAccounts()
-    {
-        return $this->hasMany('App\Models\SocialAccount');
-    }
-
     public function sendPasswordResetNotification($token)
     {
         $this->notify(new PasswordResetNotification($token));
@@ -90,5 +76,20 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyNotification());
+    }
+
+    public function role()
+    {
+        return $this->belongsTo('App\Models\Role');
+    }
+
+    public function boards()
+    {
+        return $this->hasMany('App\Models\Board');
+    }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany('App\Models\SocialAccount');
     }
 }

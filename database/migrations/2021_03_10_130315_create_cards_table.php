@@ -20,7 +20,6 @@ class CreateCardsTable extends Migration
             $table->foreign('lists_id')->references('id')->on('lists')->onDelete('cascade');
             $table->integer('order')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

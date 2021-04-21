@@ -20,7 +20,6 @@ class CreateListsTable extends Migration
             $table->foreign('board_id')->references('id')->on('boards')->onDelete('cascade');
             $table->integer('order')->default(false);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -4,15 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Card extends Model
+class Permission extends Model
 {
     protected $fillable = [
         'title',
-        'lists_id',
     ];
 
-    public function list()
-    {
-        return $this->belongsTo('App\Models\Card');
+    public function roles(){
+        return $this->belongsToMany('App\Models\Role');
     }
 }

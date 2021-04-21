@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -25,6 +26,12 @@ class ResetPasswordController extends Controller
     public function reset(ResetPasswordRequest $request)
     {
         try {
+            $user = User::where('email', $request->email)->where('email_verified_at', NULL)->first();
+
+            if ($user) {
+                throw new \Exception('Email is not verified');
+            }
+
             $response = $this->broker()->reset(
                 $this->credentials($request), function ($user, $password) {
                 $this->resetPassword($user, $password);

@@ -2,10 +2,10 @@
 
 namespace App\Http\Requests;
 
-use App\Rules\Captcha;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 
-class RegisterRequest extends FormRequest
+class UpdateUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,8 @@ class RegisterRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return Gate::allows('user_edit');
+
     }
 
     /**
@@ -26,9 +27,7 @@ class RegisterRequest extends FormRequest
     {
         return [
             'name' => ['required',"regex:/\b([A-ZÀ-ÿ][-,a-z. ']+[ ]*)+/"],
-            'email' => ['required','email','unique:users'],
-            'password' => ['required','min:8','confirmed'],
-            'g-recaptcha-response' => new Captcha()
+            'role_id' => ['required', 'exists:roles,id'],
         ];
     }
 }
