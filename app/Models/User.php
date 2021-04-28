@@ -85,7 +85,7 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
 
     public function boards()
     {
-        return $this->hasMany('App\Models\Board');
+        return $this->belongsToMany('App\Models\Board');
     }
 
     public function socialAccounts()

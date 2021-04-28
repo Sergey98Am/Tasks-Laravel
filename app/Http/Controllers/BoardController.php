@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BoardRequest;
 use App\Models\Board;
+use App\Models\User;
 use JWTAuth;
 
 class BoardController extends Controller
@@ -16,12 +17,10 @@ class BoardController extends Controller
     public function index()
     {
         try {
-            $boards = Board::where('user_id', JWTAuth::user()->id)
-                ->orderBy('id', 'DESC')
-                ->get();
-
+            $user_id = JWTAuth::user()->id;
+            $user = User::with('boards')->find($user_id);
             return response()->json([
-                'boards' => $boards
+                'boards' => $user->boards
             ], 200);
         } catch (\Exception $e) {
             return response()->json([
@@ -41,8 +40,9 @@ class BoardController extends Controller
         try {
             $board = Board::create([
                 'title' => $request->title,
-                'user_id' => JWTAuth::user()->id
             ]);
+
+            $board->users()->attach(JWTAuth::user()->id);
 
             if (!$board) {
                 throw new \Exception('Something went wrong');
@@ -77,7 +77,6 @@ class BoardController extends Controller
 
             $board->update([
                 'title' => $request->title,
-                'user_id' => JWTAuth::user()->id
             ]);
 
             return response()->json([
@@ -111,6 +110,29 @@ class BoardController extends Controller
             return response()->json([
                 'board' => $board,
                 'message' => 'Board successfully deleted'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function singleBoard($boardId)
+    {
+        try {
+            $board = Board::with([
+                'lists' => function ($q) {
+                    $q->orderBy('order')->with([
+                        'cards' => function ($q) {
+                            $q->orderBy('order');
+                        }
+                    ]);
+                }
+            ])->with('users')->find($boardId);
+
+            return response()->json([
+                'board' => $board
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

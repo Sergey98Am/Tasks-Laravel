@@ -23,9 +23,9 @@ class ForgotPasswordController extends Controller
     public function sendResetLinkEmail(ForgotPasswordRequest $request)
     {
         try {
-            $user = User::where('email', $request->email)->where('email_verified_at', NULL)->first();
+            $user = User::where('email', $request->email)->first();
 
-            if ($user) {
+            if ($user && !$user->email_verified_at) {
                 throw new \Exception('Email is not verified');
             }
 
@@ -39,7 +39,8 @@ class ForgotPasswordController extends Controller
 
             return response()->json([
                 'message' => 'Email sent',
-                'response' => $response
+                'response' => $response,
+                'user' => Password::RESET_LINK_SENT,
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

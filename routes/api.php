@@ -21,8 +21,8 @@ Route::middleware('jwt')->group(function () {
     Route::post('/change-details', 'UserController@changeDetails');
     //Boards
     Route::resource('boards', 'BoardController');
+    Route::get('/single-board/board/{board}','BoardController@singleBoard');
     //Lists
-    Route::get('/boards/{board}/lists','ListController@index');
     Route::post('/boards/{board}/lists','ListController@store');
     Route::put('/boards/{board}/lists/{list}','ListController@update');
     Route::delete('/boards/{board}/lists/{list}','ListController@destroy');
@@ -38,4 +38,7 @@ Route::middleware('jwt')->group(function () {
     Route::get('abilities', 'Admin\UserManagement\RoleController@abilities');
     Route::resource('permissions', 'Admin\UserManagement\PermissionController');
     Route::resource('users', 'Admin\UserManagement\UserController');
+    //Invite Member To Board
+    Route::post('invitation/boards/{board}', 'InvitationController@inviteMember');
+    Route::post('confirm-invitation/users/{user}/boards/{board}', 'InvitationController@confirmInvitation');
 });
