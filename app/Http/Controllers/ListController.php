@@ -9,29 +9,6 @@ use App\Models\Lists;
 
 class ListController extends Controller
 {
-    public function index($boardId)
-    {
-        try {
-            $board = Board::with([
-                'lists' => function ($q) {
-                    $q->orderBy('order')->with([
-                        'cards' => function ($q) {
-                            $q->orderBy('order');
-                        }
-                    ]);
-                }
-            ])->find($boardId);
-
-            return response()->json([
-                'board' => $board
-            ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage(),
-            ], 400);
-        }
-    }
-
     public function store(ListRequest $request, $boardId)
     {
         try {

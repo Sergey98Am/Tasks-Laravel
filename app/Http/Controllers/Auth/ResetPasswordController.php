@@ -26,9 +26,9 @@ class ResetPasswordController extends Controller
     public function reset(ResetPasswordRequest $request)
     {
         try {
-            $user = User::where('email', $request->email)->where('email_verified_at', NULL)->first();
+            $user = User::where('email', $request->email)->first();
 
-            if ($user) {
+            if ($user && !$user->email_verified_at) {
                 throw new \Exception('Email is not verified');
             }
 
