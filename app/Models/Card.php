@@ -15,4 +15,8 @@ class Card extends Model
     {
         return $this->belongsTo('App\Models\Card');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Models\Comment')->where('parent_id', null);
+    }
 }

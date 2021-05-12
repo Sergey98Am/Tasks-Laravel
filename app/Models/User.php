@@ -92,4 +92,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
     {
         return $this->hasMany('App\Models\SocialAccount');
     }
+
+    public function comments(){
+        return $this->hasMany('App\Models\Comment')->where('parent_id', null);
+    }
 }
