@@ -128,8 +128,9 @@ class BoardController extends Controller
                             $q->orderBy('order');
                         }
                     ]);
-                }
-            ])->with('users')->find($boardId);
+                },
+                'users',
+            ])->find($boardId);
 
             return response()->json([
                 'board' => $board
