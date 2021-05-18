@@ -125,7 +125,7 @@ class BoardController extends Controller
                 'lists' => function ($q) {
                     $q->orderBy('order')->with([
                         'cards' => function ($q) {
-                            $q->orderBy('order');
+                            $q->orderBy('order')->with('members');
                         }
                     ]);
                 },
