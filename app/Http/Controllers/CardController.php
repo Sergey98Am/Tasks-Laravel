@@ -90,14 +90,15 @@ class CardController extends Controller
                 Card::where('id', $id)->update(['order' => $position]);
                 $position++;
             }
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             return response()->json([
                 'message' => $e->getMessage(),
             ], 400);
         }
     }
 
-    public function moveCardToAnotherList(Request $request, $cardId) {
+    public function moveCardToAnotherList(Request $request, $cardId)
+    {
         try {
             $card = Card::find($cardId);
 
@@ -112,6 +113,46 @@ class CardController extends Controller
             return response()->json([
                 'card' => $card,
                 'message' => 'Card successfully moved'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function members($cardId)
+    {
+        try {
+            $card = Card::with('members')->find($cardId);
+
+            if (!$card) {
+                throw new \Exception('Card does not exist');
+            }
+
+            return response()->json([
+                'members' => $card->members
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function addOrRemoveMembers(Request $request, $cardId)
+    {
+        try {
+            $card = Card::find($cardId);
+
+            if (!$card) {
+                throw new \Exception('Something went wrong');
+            }
+
+            $card->members()->sync($request->members);
+
+            return response()->json([
+                'card' => $card->load('members')
             ], 200);
         } catch (\Exception $e) {
             return response()->json([

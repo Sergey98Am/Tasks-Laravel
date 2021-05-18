@@ -16,7 +16,13 @@ class Card extends Model
         return $this->belongsTo('App\Models\Card');
     }
 
-    public function comments(){
+    public function members()
+    {
+        return $this->belongsToMany('App\Models\User');
+    }
+
+    public function comments()
+    {
         return $this->hasMany('App\Models\Comment')->where('parent_id', null);
     }
 }
