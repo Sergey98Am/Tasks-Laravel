@@ -26,6 +26,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'role_id'
     ];
 
+    protected $appends = ['name_initials'];
+
     /**
      * The attributes that should be hidden for arrays.
      *
@@ -44,9 +46,15 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         'email_verified_at' => 'datetime',
     ];
 
-//    public function getFullNameAttribute() {
-//        return ucwords($this->first_name.' '.$this->last_name);
-//    }
+    public function getNameInitialsAttribute()
+    {
+        $words = explode(" ", $this->name);
+        $initials = null;
+        foreach ($words as $w) {
+            $initials .= $w[0];
+        }
+        return strtoupper($initials);
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
@@ -98,7 +106,8 @@ class User extends Authenticatable implements JWTSubject, MustVerifyEmail
         return $this->belongsToMany('App\Models\Card');
     }
 
-    public function comments(){
+    public function comments()
+    {
         return $this->hasMany('App\Models\Comment')->where('parent_id', null);
     }
 }
