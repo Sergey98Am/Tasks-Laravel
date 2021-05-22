@@ -14,6 +14,7 @@ class CardController extends Controller
         try {
             $card = Lists::find($listId)->cards()->create([
                 'title' => $request->title,
+                'priority' => null,
                 'lists_id' => $listId
             ]);
 
@@ -22,7 +23,7 @@ class CardController extends Controller
             }
 
             return response()->json([
-                'card' => $card,
+                'card' => $card->load('members'),
                 'message' => 'Card successfully created'
             ], 200);
         } catch (\Exception $e) {
@@ -150,6 +151,29 @@ class CardController extends Controller
             }
 
             $card->members()->sync($request->members);
+
+            return response()->json([
+                'card' => $card->load('members')
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage(),
+            ], 400);
+        }
+    }
+
+    public function priority(Request $request, $cardId)
+    {
+        try {
+            $card = Card::find($cardId);
+
+            if (!$card) {
+                throw new \Exception('Something went wrong');
+            }
+
+            $card->update([
+                'priority' => $request->priority,
+            ]);
 
             return response()->json([
                 'card' => $card->load('members')
