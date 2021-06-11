@@ -146,3 +146,4 @@ class BoardController extends Controller
         }
     }
 }
+
