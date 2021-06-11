@@ -34,6 +34,7 @@ Route::middleware('jwt')->group(function () {
     Route::post('/sort-card', 'CardController@sortCard');
     Route::post('/move-card-to-another-list/{card}', 'CardController@moveCardToAnotherList');
     Route::post('/cards/{card}/members', 'CardController@addOrRemoveMembers');
+    Route::post('/cards/{card}/priority', 'CardController@priority');
     // Admin
     Route::resource('roles', 'Admin\UserManagement\RoleController');
     Route::get('abilities', 'Admin\UserManagement\RoleController@abilities');
