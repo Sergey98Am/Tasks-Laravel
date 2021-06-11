@@ -132,6 +132,10 @@ class BoardController extends Controller
                 'users',
             ])->find($boardId);
 
+            if (!$board) {
+                throw new \Exception('Board does not exist');
+            }
+
             return response()->json([
                 'board' => $board
             ], 200);
