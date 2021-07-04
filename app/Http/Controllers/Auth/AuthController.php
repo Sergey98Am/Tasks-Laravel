@@ -65,14 +65,14 @@ class AuthController extends Controller
 
             $credentials = $request->only('email', 'password');
 
-            $token = JWTAuth::attempt($credentials);
+            if ($request->remember_me) {
+                $token = auth()->setTTL(86400 * 30)->attempt($credentials);
+            } else {
+                $token = JWTAuth::attempt($credentials);
+            }
 
             if (!$token) {
                 throw new \Exception('Unauthorized');
-            }
-
-            if ($request->remember_me) {
-                $token = auth()->setTTL(86400 * 30)->attempt($credentials);
             }
 
             return response()->json([
