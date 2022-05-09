@@ -1,5 +1,5 @@
 <div class="tasks">
-    <h1>Tasks (Vue.js)</h1>
+    <h1>Tasks (Laravel)</h1>
     <ul>
         <li>Html, CSS, Bootstrap, Vue.js, Laravel, MySQL</li>
         <li>Authentication with JWT Token</li>
